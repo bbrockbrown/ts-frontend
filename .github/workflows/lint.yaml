@@ -1,0 +1,63 @@
+name: Lint and Style Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Run Linters and Formatters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check component file extensions
+        run: |
+          # Only check files that contain actual JSX syntax (looking for HTML-like tags)
+          # This excludes files that only import/export components
+          for file in $(find src -type f -name "*.js"); do
+            # Skip specific file patterns
+            if [[ "$file" == *.test.js ]] || \
+               [[ "$file" == */styles.js ]] || \
+               [[ "$file" =~ [._]styles?.js$ ]] || \
+               [[ "$file" == */utils/* ]] || \
+               [[ "$file" == */hooks/* ]] || \
+               [[ "$file" == */constants.js ]]; then
+              continue
+            fi
+            
+            # Check for JSX syntax (looking for HTML-like tags)
+            # Ignore import statements with curly braces
+            if grep -l "<[A-Za-z][^>]*>" "$file" | grep -v "import.*{.*}" > /dev/null; then
+              INVALID_FILES="$INVALID_FILES$file"$'\n'
+            fi
+          done
+
+          if [ ! -z "$INVALID_FILES" ]; then
+            echo "The following files contain JSX and should use .jsx extension:"
+            echo "$INVALID_FILES"
+            echo "Files with JSX content should use .jsx extension (excluding styles, utils, and hooks)"
+            exit 1
+          fi
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        run: npm run format:check
+
+      - name: Verify import sorting
+        run: npm run check-imports
