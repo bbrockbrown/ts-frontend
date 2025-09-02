@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
-
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 
 import GoogleButton from '@/common/components/GoogleButton';
 import { Form, FormTitle } from '@/common/components/form/Form';
@@ -9,8 +6,10 @@ import { Input } from '@/common/components/form/Input';
 import SubmitButton from '@/common/components/form/SubmitButton';
 import { RedSpan } from '@/common/components/form/styles';
 import { useUser } from '@/common/contexts/UserContext';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { StyledPage } from './styles';
+import { StyledPage } from './styles.ts';
 
 const StyledLink = styled(Link)`
   color: #007bff;
@@ -35,12 +34,12 @@ export default function Login() {
     password: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
     setError('');
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
@@ -48,7 +47,7 @@ export default function Login() {
     try {
       await login(formState.email, formState.password);
       navigate('/', { replace: true });
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message || 'Failed to login. Please try again.');
     } finally {
       setIsLoading(false);
@@ -58,7 +57,7 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       await googleAuth();
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
     }
   };

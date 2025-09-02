@@ -1,16 +1,19 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import { StyledButton } from './styles';
 
-SubmitButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
-export default function SubmitButton({ children, onClick }) {
+interface SubmitButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+}
+export default function SubmitButton({
+  children,
+  onClick,
+  disabled,
+}: SubmitButtonProps) {
   return (
-    <StyledButton type='submit' onClick={onClick}>
+    <StyledButton type='submit' onClick={onClick} disabled={disabled}>
       {children}
     </StyledButton>
   );

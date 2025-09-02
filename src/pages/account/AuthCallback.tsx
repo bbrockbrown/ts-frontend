@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,9 +12,9 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
-const LoadingText = styled.p`
+const LoadingText = styled.p<{ $textColor?: string }>`
   font-size: 1rem;
-  color: ${(props) => props.theme.colors?.text || '#000'};
+  color: ${({ $textColor }) => $textColor || '#000'};
 `;
 
 export default function AuthCallback() {
@@ -62,7 +62,7 @@ export default function AuthCallback() {
         } else {
           throw new Error('Authentication verification failed');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Auth callback error:', error);
         navigate('/login', {
           state: { error: error.message },
@@ -76,7 +76,7 @@ export default function AuthCallback() {
 
   return (
     <Container>
-      <LoadingText>Completing authentication...</LoadingText>
+      <LoadingText $textColor=''>Completing authentication...</LoadingText>
     </Container>
   );
 }

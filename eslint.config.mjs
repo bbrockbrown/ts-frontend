@@ -60,6 +60,7 @@ export default tseslint.config(
         typescript: {
           alwaysTryTypes: true,
           project: './tsconfig.json',
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs'],
         },
         node: {
           paths: ['src'],

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import type { User } from '@/common/types/types';
 import styled from 'styled-components';
 
 const UsersContainer = styled.div`
@@ -47,8 +48,11 @@ const LoadingMessage = styled.div`
   padding: 1rem;
 `;
 
+// TODO: Students in Discover Program will likely need to edit this User schema to fit
+// the needs of their project.
+
 export default function UsersList() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -93,19 +97,20 @@ export default function UsersList() {
 
   return (
     <UsersContainer>
-      {users.map((user) => (
-        <UserCard key={user.email}>
-          <UserInfo>
-            <div>
-              <UserName>
-                {user.firstname} {user.lastname} (
-                {user.username || 'No username'})
-              </UserName>
-              <UserEmail>{user.email}</UserEmail>
-            </div>
-          </UserInfo>
-        </UserCard>
-      ))}
+      {users &&
+        users.map((user: User) => (
+          <UserCard key={user.email}>
+            <UserInfo>
+              <div>
+                <UserName>
+                  {user.firstName} {user.lastName} (
+                  {user.username || 'No username'})
+                </UserName>
+                <UserEmail>{user.email}</UserEmail>
+              </div>
+            </UserInfo>
+          </UserCard>
+        ))}
     </UsersContainer>
   );
 }

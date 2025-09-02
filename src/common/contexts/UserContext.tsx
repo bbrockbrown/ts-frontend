@@ -1,19 +1,27 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-export const UserContext = createContext({
-  user: null,
-  setUser: () => {},
-  isLoading: false,
-  logout: () => {},
-  checkAuth: () => {},
-});
+import type { User } from '@/common/types/types.ts';
+
+interface UserContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<boolean>;
+  checkAuth: () => Promise<boolean>;
+  googleAuth: () => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<boolean>;
+  updatePassword: (password: string, accessToken: string) => Promise<boolean>;
+}
+
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
   children: React.ReactNode;
 }
 
 export function UserProvider({ children }: UserProviderProps) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const buildUrl = (endpoint: string) => {
@@ -41,7 +49,7 @@ export function UserProvider({ children }: UserProviderProps) {
         throw new Error('Auth check failed');
       }
 
-      const userData = await response.json();
+      const userData: User = await response.json();
       console.log('User data:', userData);
       setUser(userData);
       return true;
@@ -70,7 +78,7 @@ export function UserProvider({ children }: UserProviderProps) {
         throw new Error(data.error || 'Login failed');
       }
 
-      const { token } = await response.json();
+      const { token }: { token: string } = await response.json();
       console.log('Token received:', token);
       localStorage.setItem('authToken', token);
       await checkAuth();
@@ -105,7 +113,7 @@ export function UserProvider({ children }: UserProviderProps) {
       const response = await fetch(buildUrl('/auth/google'), {
         credentials: 'include',
       });
-      const { url } = await response.json();
+      const { url }: { url: string } = await response.json();
       if (url) {
         window.location.href = url;
       } else {
@@ -183,8 +191,8 @@ export function UserProvider({ children }: UserProviderProps) {
   );
 }
 
-export const useUser = () => {
-  const context = React.useContext(UserContext);
+export const useUser = (): UserContextType => {
+  const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');
   }

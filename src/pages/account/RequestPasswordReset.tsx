@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -82,7 +82,7 @@ export default function RequestPasswordReset() {
   const [isLoading, setIsLoading] = useState(false);
   const { requestPasswordReset } = useUser();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -90,7 +90,7 @@ export default function RequestPasswordReset() {
     try {
       await requestPasswordReset(email);
       setSuccess(true);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);

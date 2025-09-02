@@ -64,8 +64,8 @@ const LogoutButton = styled(Button)`
 
 interface LogoutModalProps {
   isOpen: boolean;
-  onClose: () => {};
-  onLogout: () => {};
+  onClose: () => void;
+  onLogout: () => void;
 }
 
 const LogoutModal = ({ isOpen, onClose, onLogout }: LogoutModalProps) => {

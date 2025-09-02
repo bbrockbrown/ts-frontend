@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactEventHandler } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -41,11 +41,11 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
 `;
 
-const PasswordStrength = styled.div`
+const PasswordStrength = styled.div<{ $strength: string }>`
   height: 5px;
   margin-top: 5px;
-  background-color: ${({ strength }) => {
-    switch (strength) {
+  background-color: ${({ $strength }) => {
+    switch ($strength) {
       case 'weak':
         return '#ff4d4d';
       case 'medium':
@@ -56,8 +56,8 @@ const PasswordStrength = styled.div`
         return '#ccc';
     }
   }};
-  width: ${({ strength }) => {
-    switch (strength) {
+  width: ${({ $strength }) => {
+    switch ($strength) {
       case 'weak':
         return '33%';
       case 'medium':
@@ -155,7 +155,7 @@ export default function ResetPassword() {
     return requirements;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     const hash = window.location.hash.substring(1);
@@ -213,7 +213,7 @@ export default function ResetPassword() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <PasswordStrength strength={checkPasswordStrength(password)} />
+          <PasswordStrength $strength={checkPasswordStrength(password)} />
           {password && (
             <PasswordRequirements>
               {validatePassword(password).map((req, index) => (

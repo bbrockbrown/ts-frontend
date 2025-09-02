@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import styled from 'styled-components';
 
 import { Subtitle, Title } from '@/common/components/Text';
 import UsersList from '@/common/components/Users/UsersList';
-import { UserContext } from '@/common/contexts/UserContext';
+import { useUser } from '@/common/contexts/UserContext';
 
 const TextContainer = styled.div`
   display: flex;
@@ -21,13 +20,13 @@ const HomePage = styled.div`
 `;
 
 export default function Home() {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
 
   return (
     <HomePage>
       <TextContainer>
         <Title>Home Page</Title>
-        <Subtitle>Welcome, {user?.firstname || 'User'}!</Subtitle>
+        <Subtitle>Welcome, {user?.firstName || 'User'}!</Subtitle>
       </TextContainer>
       <UsersList />
     </HomePage>

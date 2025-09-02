@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { type ChangeEvent, useState } from 'react';
 
-import { Icon } from 'assets/icons/icons';
-import PropTypes from 'prop-types';
+import { Icon } from '@/assets/icons.ts';
 
 import {
   IconContainer,
@@ -13,12 +12,12 @@ import {
   StyledInput,
 } from './styles';
 
-TitledInput.propTypes = {
-  title: PropTypes.string.isRequired,
-  required: PropTypes.bool,
-  children: PropTypes.node.isRequired,
-};
-function TitledInput({ title, required, children }) {
+interface TitledInputProps {
+  title: string;
+  required: boolean;
+  children: React.ReactNode;
+}
+function TitledInput({ title, required, children }: TitledInputProps) {
   return (
     <InputContainer>
       <InputName>
@@ -30,24 +29,22 @@ function TitledInput({ title, required, children }) {
   );
 }
 
-const InputPropTypes = {
-  onChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  required: PropTypes.bool,
-};
-
-TextField.propTypes = InputPropTypes;
-function TextField(props) {
+interface InputPropTypes {
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  value?: string;
+  required: boolean;
+  name?: string;
+}
+function TextField(props: InputPropTypes) {
   props.placeholder ??= 'Text Here';
   return <StyledInput type='text' {...props} />;
 }
 
-InputText.propTypes = {
-  title: PropTypes.string.isRequired,
-  ...InputPropTypes,
-};
-function InputText({ title, ...rest }) {
+interface InputTextProps extends InputPropTypes {
+  title: string;
+}
+function InputText({ title, ...rest }: InputTextProps) {
   return (
     <TitledInput title={title} required={rest.required}>
       <TextField {...rest} />
@@ -55,8 +52,8 @@ function InputText({ title, ...rest }) {
   );
 }
 
-PasswordField.propTypes = InputPropTypes;
-function PasswordField(props) {
+interface PasswordFieldProps extends InputPropTypes {}
+function PasswordField(props: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -72,11 +69,10 @@ function PasswordField(props) {
   );
 }
 
-InputPassword.propTypes = {
-  title: PropTypes.string.isRequired,
-  ...InputPropTypes,
-};
-function InputPassword({ title, ...rest }) {
+interface InputPasswordProps extends InputPropTypes {
+  title: string;
+}
+function InputPassword({ title, ...rest }: InputPasswordProps) {
   return (
     <TitledInput title={title} required={rest.required}>
       <PasswordField {...rest} />

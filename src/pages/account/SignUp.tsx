@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import { Input } from '@/common/components/form/Input';
 import SubmitButton from '@/common/components/form/SubmitButton';
 import { useUser } from '@/common/contexts/UserContext';
 
-import { StyledPage } from './styles';
+import { StyledPage } from './styles.ts';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -24,27 +24,27 @@ export default function SignUp() {
     username: '',
   });
 
-  const handleChangeFirstname = (e) => {
+  const handleChangeFirstname = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, firstname: e.target.value });
     setError('');
   };
 
-  const handleChangeLastname = (e) => {
+  const handleChangeLastname = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, lastname: e.target.value });
     setError('');
   };
 
-  const handleChangeEmail = (e) => {
+  const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, email: e.target.value });
     setError('');
   };
 
-  const handleChangePassword = (e) => {
+  const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, password: e.target.value });
     setError('');
   };
 
-  const handleChangeUsername = (e) => {
+  const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, username: e.target.value });
     setError('');
   };
@@ -52,12 +52,12 @@ export default function SignUp() {
   const handleGoogleSignup = async () => {
     try {
       await googleAuth();
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
@@ -94,7 +94,7 @@ export default function SignUp() {
             'Account created successfully! Please check your email to verify your account.',
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Signup error:', error);
       setError(error.message || 'Failed to create account. Please try again.');
     } finally {
@@ -112,12 +112,14 @@ export default function SignUp() {
           placeholder='John'
           value={formState.firstname}
           onChange={handleChangeFirstname}
+          required
         />
         <Input.Text
           title='Last name'
           placeholder='Smith'
           value={formState.lastname}
           onChange={handleChangeLastname}
+          required
         />
         <Input.Text
           title='Email'
@@ -131,6 +133,7 @@ export default function SignUp() {
           placeholder='johnsmith'
           value={formState.username}
           onChange={handleChangeUsername}
+          required={false}
         />
         <Input.Password
           title='Password'
