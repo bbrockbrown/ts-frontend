@@ -1,5 +1,5 @@
-import { ReactComponent as eye } from './eye.svg';
-import { ReactComponent as eyeClosed } from './eyeclosed.svg';
+import eye from './eye.svg';
+import eyeClosed from './eyeclosed.svg';
 
 /**
  * How to add new icons:
