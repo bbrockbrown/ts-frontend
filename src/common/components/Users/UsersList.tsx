@@ -60,8 +60,10 @@ export default function UsersList() {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('authToken');
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        console.log("fetching users from fetchUsers with token", token)
         const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/auth/users`,
+          `${backendUrl}/auth/users`,
           {
             credentials: 'include',
             headers: {
@@ -76,6 +78,7 @@ export default function UsersList() {
 
         const data = await response.json();
         setUsers(data);
+        console.log('userData', data);
       } catch (err: any) {
         setError(err.message);
         console.error('Error fetching users:', err);

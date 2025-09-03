@@ -63,7 +63,11 @@ function PasswordField(props: PasswordFieldProps) {
     <PasswordContainer>
       <StyledInput type={showPassword ? 'text' : 'password'} {...props} />
       <IconContainer onClick={toggleShowPassword}>
-        {showPassword ? <Icon.eyeClosed /> : <Icon.eye />}
+        <img 
+          src={showPassword ? Icon.eyeClosed : Icon.eye} 
+          alt={showPassword ? 'Hide password' : 'Show password'}
+          style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+        />
       </IconContainer>
     </PasswordContainer>
   );

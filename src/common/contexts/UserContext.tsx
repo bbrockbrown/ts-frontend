@@ -14,7 +14,9 @@ interface UserContextType {
   updatePassword: (password: string, accessToken: string) => Promise<boolean>;
 }
 
-export const UserContext = createContext<UserContextType | undefined>(undefined);
+export const UserContext = createContext<UserContextType | undefined>(
+  undefined
+);
 
 interface UserProviderProps {
   children: React.ReactNode;
@@ -25,7 +27,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const buildUrl = (endpoint: string) => {
-    const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     if (backendUrl === null || backendUrl === undefined) {
       throw new Error('Backend URL not defined in .env file');
     } else {
@@ -100,6 +102,9 @@ export function UserProvider({ children }: UserProviderProps) {
         throw new Error('Logout failed');
       }
 
+      // Remove authToken from localStorage for security purposes
+      localStorage.removeItem('authToken');
+
       setUser(null);
       return true;
     } catch (error) {
@@ -171,7 +176,12 @@ export function UserProvider({ children }: UserProviderProps) {
   };
 
   useEffect(() => {
-    checkAuth();
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      checkAuth();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
   const contextValue = {
